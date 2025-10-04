@@ -1,0 +1,5 @@
+<Bindings>
+	<Binding name="Destroy Cursor Item" header="DestroyCursorItem">
+		destroy_cursor_item()
+	</Binding>
+</Bindings>
