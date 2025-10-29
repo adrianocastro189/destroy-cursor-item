@@ -8,19 +8,30 @@ function destroy_cursor_item()
     end
 end
 
+--[[ Helper function to extract item ID from item link ]]
 local function get_item_id(link)
     if not link then return nil end
     local _, _, id = string.find(link, "item:(%d+):")
     return tonumber(id)
 end
 
+-- [[ Helper function to get vendor price from aux addon ]]
 local function get_vendor_price(item_id)
-    return aux and aux.account
-        and aux.account.merchant_sell
-        and aux.account.merchant_sell[item_id]
+    return is_aux_loaded() and aux.account.merchant_sell[item_id]
+end
+
+-- [[ Helper function to check if aux addon is loaded ]]
+local function is_aux_loaded()
+    return aux ~= nil and aux.account ~= nil and aux.account.merchant_sell ~= nil
 end
 
 function pick_lowest_value_item()
+    if not is_aux_loaded() then
+        DEFAULT_CHAT_FRAME:AddMessage(
+            "Aux addon is not loaded. DestroyCursorItem won't automatically pick the lowest gray value item.")
+        return
+    end
+
     local lowestValue, lowestBag, lowestSlot = nil, nil, nil
 
     for bag = 0, 4 do
@@ -55,9 +66,6 @@ function pick_lowest_value_item()
         DEFAULT_CHAT_FRAME:AddMessage("Cheapest gray item picked up: " ..
             itemLink .. " with vendor price " .. lowestValue .. ".")
     else
-        DEFAULT_CHAT_FRAME:AddMessage("No price found. Please ensure aux is loaded first.")
+        DEFAULT_CHAT_FRAME:AddMessage("No gray items with vendor price found in the bags.")
     end
 end
-
-SLASH_LOWESTVALUE1 = "/lowestvalue"
-SlashCmdList["LOWESTVALUE"] = PickLowestValueItem
