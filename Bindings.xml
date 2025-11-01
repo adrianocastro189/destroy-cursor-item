@@ -1,5 +1,5 @@
 <Bindings>
 	<Binding name="Destroy Cursor Item" header="DestroyCursorItem">
-		destroy_cursor_item()
+		CursorDestroyer.maybe_pick_and_destroy()
 	</Binding>
 </Bindings>
