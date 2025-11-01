@@ -23,8 +23,8 @@ A lightweight World of Warcraft addon that allows players to assign a hotkey to 
 
 ## Changelog
 
-* 2025.11.01 - Version 1.2.0
+* 2025.11.01 - Version 1.1.0
   * Added functionality to pick up the cheapest gray item stack when no item is
     on the cursor
-* 2025.10.04 - Version 1.1.0
+* 2025.10.04 - Version 1.0.0
   * First version with basic destroy functionality
