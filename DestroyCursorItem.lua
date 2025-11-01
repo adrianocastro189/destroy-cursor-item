@@ -52,7 +52,7 @@ CursorDestroyer = {
     pick_lowest_value_item = function()
         if not CursorDestroyer.is_aux_loaded() then
             CursorDestroyer.print(
-            "Aux addon is not loaded. DestroyCursorItem won't automatically pick the lowest gray value item.")
+                "Aux addon is not loaded. DestroyCursorItem won't automatically pick the lowest gray value item.")
             return
         end
 
@@ -67,11 +67,13 @@ CursorDestroyer = {
                         local id = CursorDestroyer.get_item_id(link)
                         local _, _, quality = GetItemInfo(id)
 
-                        if quality == 0 then -- only gray items
+                        if quality == 0 then -- only consider gray items
                             local price = CursorDestroyer.get_vendor_price(id)
-                            if price and price > 0 then
-                                if not lowestValue or price < lowestValue then
-                                    lowestValue = price
+                            local _, itemCount = GetContainerItemInfo(bag, slot)
+                            if price and price > 0 and itemCount and itemCount > 0 then
+                                local totalValue = price * itemCount
+                                if not lowestValue or totalValue < lowestValue then
+                                    lowestValue = totalValue
                                     lowestBag = bag
                                     lowestSlot = slot
                                 end
@@ -86,8 +88,9 @@ CursorDestroyer = {
             ClearCursor()
             PickupContainerItem(lowestBag, lowestSlot)
             local itemLink = GetContainerItemLink(lowestBag, lowestSlot)
-            CursorDestroyer.print("Cheapest gray item picked up: " ..
-                itemLink .. " with vendor price " .. CursorDestroyer.format_money(lowestValue) .. ".")
+            local _, itemCount = GetContainerItemInfo(lowestBag, lowestSlot)
+            CursorDestroyer.print("Cheapest slot items picked up: " ..
+                itemLink .. "x" .. itemCount .. " with total vendor price " .. CursorDestroyer.format_money(lowestValue) .. ".")
         else
             CursorDestroyer.print("No gray items with vendor price found in the bags.")
         end
